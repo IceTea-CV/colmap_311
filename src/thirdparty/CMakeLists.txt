@@ -77,7 +77,6 @@ if(FETCH_POSELIB)
         set(_fetch_content_declare_args "SYSTEM" "EXCLUDE_FROM_ALL")
     endif()
     
-    # 로컬 경로 설정 (프로젝트 루트 기준)
     set(POSELIB_LOCAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/poselib.zip")
     
     message(STATUS "Using local PoseLib archive at: ${POSELIB_LOCAL_PATH}")
@@ -85,7 +84,6 @@ if(FETCH_POSELIB)
     # 로컬 파일 사용을 위한 FetchContent_Declare 수정
     FetchContent_Declare(poselib
         URL "file://${POSELIB_LOCAL_PATH}"
-        # URL_HASH는 여전히 유지 (파일 무결성 검증)
         URL_HASH SHA256=20ff75d14c839dcab3d38fb51503c47088898f394b812472a758ec17720a54c2
         ${_fetch_content_declare_args}
     )
