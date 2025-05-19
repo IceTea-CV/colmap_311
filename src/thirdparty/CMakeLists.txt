@@ -46,6 +46,7 @@ if(GPU_ENABLED)
 endif()
 add_subdirectory(VLFeat)
 
+"""
 if(FETCH_POSELIB)
     include(FetchContent)
     # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
@@ -57,6 +58,34 @@ if(FETCH_POSELIB)
     endif()
     FetchContent_Declare(poselib
         URL https://github.com/PoseLib/PoseLib/archive/8028473d92c9347794a0e3d3541863b5cbb15743.zip
+        URL_HASH SHA256=20ff75d14c839dcab3d38fb51503c47088898f394b812472a758ec17720a54c2
+        ${_fetch_content_declare_args}
+    )
+    message(STATUS "Configuring PoseLib...")
+    set(MARCH_NATIVE OFF CACHE BOOL "")
+    FetchContent_MakeAvailable(poselib)
+    message(STATUS "Configuring PoseLib... done")
+endif()
+"""
+if(FETCH_POSELIB)
+    include(FetchContent)
+    # Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP in CMake 3.24:
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+        cmake_policy(SET CMP0135 NEW)
+    endif()
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28")
+        set(_fetch_content_declare_args "SYSTEM" "EXCLUDE_FROM_ALL")
+    endif()
+    
+    # 로컬 경로 설정 (프로젝트 루트 기준)
+    set(POSELIB_LOCAL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/poselib.zip")
+    
+    message(STATUS "Using local PoseLib archive at: ${POSELIB_LOCAL_PATH}")
+    
+    # 로컬 파일 사용을 위한 FetchContent_Declare 수정
+    FetchContent_Declare(poselib
+        URL "file://${POSELIB_LOCAL_PATH}"
+        # URL_HASH는 여전히 유지 (파일 무결성 검증)
         URL_HASH SHA256=20ff75d14c839dcab3d38fb51503c47088898f394b812472a758ec17720a54c2
         ${_fetch_content_declare_args}
     )
